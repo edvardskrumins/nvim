@@ -15,10 +15,10 @@ return {
         ensure_installed = {
 	  -- Backend (Laravel)
 	  "intelephense",
-	  "blade",
+	  -- Laravel (PHP + Blade): install via :MasonInstall laravel-ls (not in mason-lspconfig ensure_installed map)
 
 	  -- Frontend
-	  "tsserver",
+	  "ts_ls",
 	  "eslint",
 	  "html",
 	  "cssls",
@@ -73,11 +73,26 @@ return {
 --        on_attach = on_attach,
 --      }
 
-      -- Blade
-      vim.lsp.config.blade = {
-        cmd = { "blade-language-server", "--stdio" },
-        filetypes = { "blade" },
+      -- PHP (Intelephense)
+      vim.lsp.config.intelephense = {
+        cmd = { "intelephense", "--stdio" },
+        filetypes = { "php" },
         root_markers = { "composer.json", "artisan", ".git" },
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+          intelephense = {
+            files = { maxSize = 1000000 },
+            telemetry = { enabled = false },
+          },
+        },
+      }
+
+      -- Laravel (PHP + Blade) — run :MasonInstall laravel-ls once
+      vim.lsp.config.laravel_ls = {
+        cmd = { "laravel-ls" },
+        filetypes = { "php", "blade" },
+        root_markers = { "artisan", "composer.json", ".git" },
         capabilities = capabilities,
         on_attach = on_attach,
       }
@@ -85,7 +100,7 @@ return {
       -- ======================
       -- JavaScript / TypeScript
       -- ======================
-      vim.lsp.config.tsserver = {
+      vim.lsp.config.ts_ls = {
         cmd = { "typescript-language-server", "--stdio" },
         filetypes = {
           "javascript",
@@ -230,6 +245,20 @@ return {
         },
       }
 
+      -- Enable all configured LSPs (required in Neovim 0.11+; config alone does not start them)
+      vim.lsp.enable({
+        "intelephense",
+        "laravel_ls",
+        "ts_ls",
+        "eslint",
+        "html",
+        "cssls",
+        "emmet_ls",
+        "jsonls",
+        "dockerls",
+        "yamlls",
+        "lua_ls",
+      })
 
       -- diagnostics config with modern sign configuration
       vim.diagnostic.config({

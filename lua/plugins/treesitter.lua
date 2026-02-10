@@ -1,45 +1,23 @@
 return {
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  event = { "BufReadPost", "BufNewFile" },
-  opts = {
-    ensure_installed = {
-      -- Core
-      "lua",
-      "vim",
-      "vimdoc",
-
-      -- PHP / Laravel
-      "php",
-      "phpdoc",
-
-      -- FE 
-      "javascript",
-      "typescript",
-      "tsx",
-      "json",
-
-      -- Deploy 
-      "dockerfile",
-      "yaml",
-
-      -- General
-      "html",
-      "css",
-      "bash",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      ensure_installed = {
+        "lua", "vim", "vimdoc",
+        "php", "phpdoc",
+        "javascript", "typescript", "tsx", "json",
+        "dockerfile", "yaml",
+        "html", "css", "bash",
+      },
+      highlight = { enable = true, additional_vim_regex_highlighting = false },
+      indent = { enable = true },
     },
-
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = false 
-    },
-
-    indent = {
-      enable = true,
-    },
-
-    autotag = {
-      enable = true,
-    },
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    opts = {},
   },
 }
