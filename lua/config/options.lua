@@ -6,18 +6,18 @@ vim.opt.clipboard = "unnamedplus"
 
 
 -- Peachpuff with black background 
-vim.opt.background = "dark"
+-- vim.opt.background = "dark"
 --vim.cmd("colorscheme peachpuff")
 
 
 
 
-vim.api.nvim_create_autocmd("ColorScheme", {
-  pattern = "cobalt2",
-  callback = function()
-    vim.api.nvim_set_hl(0, "Cursor", { fg = "#0E354B", bg = "#ffffff" })
-  end,
-})
+--vim.api.nvim_create_autocmd("ColorScheme", {
+--  pattern = "cobalt2",
+--  callback = function()
+--    vim.api.nvim_set_hl(0, "Cursor", { fg = "#0E354B", bg = "#ffffff" })
+--  end,
+--})
 
 
 
