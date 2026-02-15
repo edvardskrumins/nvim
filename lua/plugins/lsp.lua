@@ -7,12 +7,14 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
+      "nvim-telescope/telescope.nvim",
     },
     config = function()
       -- Mason setup
       require("mason").setup()
       require("mason-lspconfig").setup({
         ensure_installed = {
+	  "gopls",
 	  -- Backend (Laravel)
 	  "intelephense",
 	  -- Laravel (PHP + Blade): install via :MasonInstall laravel-ls (not in mason-lspconfig ensure_installed map)
@@ -42,7 +44,7 @@ return {
         local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
-        keymap("n", "gd", vim.lsp.buf.definition, opts) -- go to definition
+        keymap("n", "gd", function() require("telescope.builtin").lsp_definitions() end, opts) -- go to definition
         keymap("n", "gr", vim.lsp.buf.references, opts) -- go to references
         keymap("n", "gi", vim.lsp.buf.implementation, opts) -- go to implementation
         keymap("n", "K", vim.lsp.buf.hover, opts) -- hover
@@ -84,6 +86,22 @@ return {
           intelephense = {
             files = { maxSize = 1000000 },
             telemetry = { enabled = false },
+          },
+        },
+      }
+
+      -- Go
+      vim.lsp.config.gopls = {
+        cmd = { "gopls", "serve" },
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
+        root_markers = { "go.work", "go.mod", ".git" },
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+          gopls = {
+            analyses = { unusedparams = true },
+            staticcheck = true,
+            gofumpt = true,
           },
         },
       }
@@ -247,6 +265,7 @@ return {
 
       -- Enable all configured LSPs (required in Neovim 0.11+; config alone does not start them)
       vim.lsp.enable({
+        "gopls",
         "intelephense",
         "laravel_ls",
         "ts_ls",

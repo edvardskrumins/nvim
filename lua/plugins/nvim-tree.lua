@@ -12,7 +12,7 @@ return {
       },
       actions = {
         open_file = {
-          stay_in_tree = true, -- don't jump focus to the editor when opening
+          quit_on_open = false, -- keep tree open when opening files
         },
       },
     })
