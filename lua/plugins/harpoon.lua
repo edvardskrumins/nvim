@@ -34,7 +34,7 @@ return {
         vim.keymap.set("n", "<leader>fl", function() toggle_telescope(harpoon:list()) end, -- open up the list in telescope
             { desc = "Open harpoon window" })
         vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end) -- toggle the harpoon quick menu UI
-        vim.keymap.set("n", "<C-n>", function() harpoon:list():next() end) -- jump to the next harpooned file
-        vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end) -- jump to the previous harpooned file
+        --vim.keymap.set("n", "<C-n>", function() harpoon:list():next() end) -- jump to the next harpooned file
+        --vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end) -- jump to the previous harpooned file
     end
 }
