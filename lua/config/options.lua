@@ -28,3 +28,13 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
+
+
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(ev)
+    local ok = pcall(vim.treesitter.start, ev.buf)
+    if not ok then
+      -- no parser for this filetype, fall back to syntax
+    end
+  end,
+})

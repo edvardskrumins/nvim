@@ -9,3 +9,9 @@ vim.keymap.set("n", "\\", "<cmd>NvimTreeToggle<CR>", { noremap = true, silent = 
 vim.keymap.set("n", "l", function()
   vim.cmd("normal! l")
 end, { noremap = true, silent = true })
+
+
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action) -- import class
