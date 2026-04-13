@@ -21,9 +21,8 @@ return {
         "CursorMoved",
       },
     })
-    require("neoscroll.config").set_mappings({
-      ["<C-k>"] = { "scroll", { "-0.10", "false", "100" } },
-      ["<C-j>"] = { "scroll", {  "0.10", "false", "100" } },
-    })
+    local neoscroll = require("neoscroll")
+    vim.keymap.set({'n','v','x'}, '<C-k>', function() neoscroll.scroll(-0.10, { move_cursor=false, duration=100 }) end)
+    vim.keymap.set({'n','v','x'}, '<C-j>', function() neoscroll.scroll( 0.10, { move_cursor=false, duration=100 }) end)
   end,
 }

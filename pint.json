@@ -8,6 +8,11 @@
         "concat_space": {
             "spacing": "one"
         },
-        "no_superfluous_phpdoc_tags": false
+        "no_superfluous_phpdoc_tags": false,
+        "binary_operator_spaces": {
+            "operators": {
+                "=>": "align_single_space_minimal"
+            }
+        }
     }
 }

@@ -78,7 +78,7 @@ return {
             vim.lsp.config.intelephense = {
                 cmd = { "intelephense", "--stdio" },
                 filetypes = { "php" },
-                root_markers = { "composer.json", "artisan", ".git" },
+                root_markers = { "artisan" },
                 capabilities = capabilities,
                 on_attach = on_attach,
                 settings = {

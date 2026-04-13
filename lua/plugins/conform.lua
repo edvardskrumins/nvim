@@ -10,10 +10,6 @@ return {
                     args = { "--config", vim.fn.expand("~/.config/nvim/pint.json"), "$FILENAME" },
                 },
             },
-            format_on_save = {
-                timeout_ms = 500,
-                lsp_fallback = true,
-            },
         })
 
         vim.keymap.set("n", "<leader>f", function()
