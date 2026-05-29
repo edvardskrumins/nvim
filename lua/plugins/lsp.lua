@@ -40,7 +40,11 @@ return {
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
             -- on_attach function to map keys after LSP attaches to buffer
-            local on_attach = function(_, bufnr)
+            local on_attach = function(client, bufnr)
+                -- Intelephense semantic tokens conflict with treesitter PHP highlights
+                if client.name == "intelephense" then
+                    client.server_capabilities.semanticTokensProvider = nil
+                end
                 local opts = { noremap = true, silent = true, buffer = bufnr }
                 local keymap = vim.keymap.set
 
