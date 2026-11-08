@@ -11,7 +11,6 @@ return {
     lazy = false,
     main = "nvim-treesitter",
     opts = {
-      parser_install_dir = vim.fn.stdpath("data") .. "/site",
       ensure_installed = ts_langs,
       indent = { enable = true },
     },
