@@ -15,6 +15,7 @@ return {
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     "gopls",
+                    "rust_analyzer",
                     -- Backend (Laravel)
                     "intelephense",
                     -- Laravel (PHP + Blade): install via :MasonInstall laravel-ls (not in mason-lspconfig ensure_installed map)
@@ -105,6 +106,24 @@ return {
                 },
             }
 
+            -- Rust
+            -- Bundled lspconfig root_dir (cargo metadata workspace detection) is kept.
+            -- Use mason's binary explicitly: ~/.cargo/bin/rust-analyzer is a rustup proxy
+            -- that errors unless `rustup component add rust-analyzer` was run.
+            local mason_ra = vim.fn.stdpath("data") .. "/mason/bin/rust-analyzer"
+            vim.lsp.config.rust_analyzer = {
+                cmd = { vim.fn.executable(mason_ra) == 1 and mason_ra or "rust-analyzer" },
+                filetypes = { "rust" },
+                capabilities = capabilities,
+                on_attach = on_attach,
+                settings = {
+                    ["rust-analyzer"] = {
+                        cargo = { allFeatures = true },
+                        check = { command = "clippy" },
+                    },
+                },
+            }
+
             -- Laravel (PHP + Blade) — run :MasonInstall laravel-ls once
             vim.lsp.config.laravel_ls = {
                 cmd = { "laravel-ls" },
@@ -125,7 +144,20 @@ return {
                     "typescript",
                     "typescriptreact",
                 },
-                root_markers = { "package.json", "vite.config.js", ".git" },
+                -- Override bundled root_dir which uses nested tables incompatible with nvim 0.12-dev
+                root_dir = function(bufnr, on_dir)
+                    local root_markers = { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock", ".git" }
+                    local deno_root = vim.fs.root(bufnr, { "deno.json", "deno.jsonc" })
+                    local deno_lock_root = vim.fs.root(bufnr, { "deno.lock" })
+                    local project_root = vim.fs.root(bufnr, root_markers)
+                    if deno_lock_root and (not project_root or #deno_lock_root > #project_root) then
+                        return
+                    end
+                    if deno_root and (not project_root or #deno_root >= #project_root) then
+                        return
+                    end
+                    on_dir(project_root or vim.fn.getcwd())
+                end,
                 capabilities = capabilities,
                 on_attach = on_attach,
             }
@@ -139,13 +171,24 @@ return {
                     "typescriptreact",
                     "vue",
                 },
-                root_markers = {
-                    ".eslintrc",
-                    ".eslintrc.js",
-                    ".eslintrc.json",
-                    "package.json",
-                    ".git",
-                },
+                -- Override bundled root_dir which uses nested tables incompatible with nvim 0.12-dev
+                root_dir = function(bufnr, on_dir)
+                    if vim.fs.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" }) then
+                        return
+                    end
+                    local root = vim.fs.root(bufnr, {
+                        "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock", ".git",
+                    }) or vim.fn.getcwd()
+                    local fname = vim.api.nvim_buf_get_name(bufnr)
+                    local has_cfg = vim.fs.find({
+                        ".eslintrc", ".eslintrc.js", ".eslintrc.cjs", ".eslintrc.yaml",
+                        ".eslintrc.yml", ".eslintrc.json", "eslint.config.js",
+                        "eslint.config.mjs", "eslint.config.cjs",
+                    }, { path = fname, type = "file", limit = 1, upward = true })[1]
+                    if has_cfg then
+                        on_dir(root)
+                    end
+                end,
                 capabilities = capabilities,
                 on_attach = on_attach,
             }
@@ -265,6 +308,7 @@ return {
             -- Enable all configured LSPs (required in Neovim 0.11+; config alone does not start them)
             vim.lsp.enable({
                 "gopls",
+                "rust_analyzer",
                 "intelephense",
                 "laravel_ls",
                 "ts_ls",

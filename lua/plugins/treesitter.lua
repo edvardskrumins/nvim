@@ -1,7 +1,7 @@
 local ts_langs = {
   "go", "gomod", "gowork", "php", "phpdoc", "lua", "vim", "vimdoc",
   "javascript", "typescript", "tsx", "json", "dockerfile", "yaml",
-  "html", "css", "bash",
+  "html", "css", "bash", "rust", "toml",
 }
 
 return {
